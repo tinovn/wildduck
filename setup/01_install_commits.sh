@@ -4,6 +4,7 @@ OURNAME=01_install_commits.sh
 
 apt-get update
 apt-get install -y lsb-release ca-certificates curl gnupg
+apt-get install lsof
 
 NODE_MAJOR="22"
 MONGODB="8.0"
