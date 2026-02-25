@@ -1,5 +1,221 @@
 # Changelog
 
+## [1.46.22](https://github.com/zone-eu/wildduck/compare/v1.46.21...v1.46.22) (2026-02-16)
+
+
+### Bug Fixes
+
+* **api-filters:** ZMS-15: unify FilterAction and FilterActionUpdate joi schemas, allow actions to be nullable ([#994](https://github.com/zone-eu/wildduck/issues/994)) ([17fcf3c](https://github.com/zone-eu/wildduck/commit/17fcf3c049ccbe943f69aff90e5fc90fbcc4a68e))
+* **api-messages-search:** ZMSA-80: fix messages search q param parsing for AND fulltext search ([#995](https://github.com/zone-eu/wildduck/issues/995)) ([d3e9f63](https://github.com/zone-eu/wildduck/commit/d3e9f63cef1f4d7412c72e0816d4039ca194ba40))
+* **api:** ZMSA-74: fix api endpoints' input and output object types ([#988](https://github.com/zone-eu/wildduck/issues/988)) ([ec1ed40](https://github.com/zone-eu/wildduck/commit/ec1ed407f692e1f5754bd12498492b8de6cd18b3))
+* update test workflow, bump mongodb action version ([#998](https://github.com/zone-eu/wildduck/issues/998)) ([fe2d4a5](https://github.com/zone-eu/wildduck/commit/fe2d4a5cbc57d55c2d7ed31090739349fc5f996d))
+
+## [1.46.21](https://github.com/zone-eu/wildduck/compare/v1.46.20...v1.46.21) (2026-02-09)
+
+
+### Bug Fixes
+
+* **logging-autoreply:** ZMSA-65: loggelf autoreply error in filterHandler.storeMessage ([#983](https://github.com/zone-eu/wildduck/issues/983)) ([7b43049](https://github.com/zone-eu/wildduck/commit/7b43049a614a3bafc6d878e8923b81557e80e789))
+* **logging-redis:** ZMSA-78: Improve redis config, error logging and retry handling ([#987](https://github.com/zone-eu/wildduck/issues/987)) ([86d2627](https://github.com/zone-eu/wildduck/commit/86d26276a5ad58a689ea60378a71ec6f827bdad2))
+* **messages-search:** ZMSA-80: fix SearchString import. Fix messages search q param parsing, add search tests for q param ([#990](https://github.com/zone-eu/wildduck/issues/990)) ([312f9f7](https://github.com/zone-eu/wildduck/commit/312f9f787fc75881c15303f7833be978e4325f21))
+* ZMSA-64: on API outbound email sends add passwordType: master to envelope object ([#978](https://github.com/zone-eu/wildduck/issues/978)) ([24ba575](https://github.com/zone-eu/wildduck/commit/24ba57520afd88aa5435fc365f55ea3695f0d66a))
+
+## [1.46.20](https://github.com/zone-eu/wildduck/compare/v1.46.19...v1.46.20) (2026-01-29)
+
+
+### Bug Fixes
+
+* **docs:** update docs ([#981](https://github.com/zone-eu/wildduck/issues/981)) ([d7f3658](https://github.com/zone-eu/wildduck/commit/d7f365885bc06b3aec8ba78a2045438a8160acb7))
+* **imap-indexer:** Revert "fix(rebuild): ZMSA-48: fix rebuilding of multipart parts ([#942](https://github.com/zone-eu/wildduck/issues/942))" ([#980](https://github.com/zone-eu/wildduck/issues/980)) ([545800d](https://github.com/zone-eu/wildduck/commit/545800d17a395370f42c4da9518b72e7a3f299d5))
+
+## [1.46.19](https://github.com/zone-eu/wildduck/compare/v1.46.18...v1.46.19) (2026-01-27)
+
+
+### Bug Fixes
+
+* **api:** ZMSA-62: API response type fixes ([#975](https://github.com/zone-eu/wildduck/issues/975)) ([f7fe4d7](https://github.com/zone-eu/wildduck/commit/f7fe4d7334d69088077b113a7b4363c19b91a89d))
+* **imap-search:** ZMSA-77: revert ZMSA-67, add UID SEARCH protocol tests ([#977](https://github.com/zone-eu/wildduck/issues/977)) ([da2ea50](https://github.com/zone-eu/wildduck/commit/da2ea5033cebcbd01f333202e0447d82af5cb357))
+
+## [1.46.18](https://github.com/zone-eu/wildduck/compare/v1.46.17...v1.46.18) (2026-01-22)
+
+
+### Bug Fixes
+
+* **filter-handler:** ZMSA-63: filter handler store message return stored message size ([#968](https://github.com/zone-eu/wildduck/issues/968)) ([fb32e9e](https://github.com/zone-eu/wildduck/commit/fb32e9e5874d939bba4687a71811cad8f2f9498b))
+* **filters-actions-spam:** ZMSA-71-2: Allow spam action to be null thus deleting it ([#967](https://github.com/zone-eu/wildduck/issues/967)) ([0529f8f](https://github.com/zone-eu/wildduck/commit/0529f8f5d7922dfde4a3cde09d8d8a87e4c22883))
+* **filters-list:** ZMSA-71: when requesting filters list value also return original query and action field values ([#965](https://github.com/zone-eu/wildduck/issues/965)) ([cdc7c63](https://github.com/zone-eu/wildduck/commit/cdc7c63ad3a010d39a4b42831abb83420e93aea5))
+* **logging:** ZMSA-56: IMAP and POP3 servers loggelf errors ([#962](https://github.com/zone-eu/wildduck/issues/962)) ([88ea15c](https://github.com/zone-eu/wildduck/commit/88ea15c75a183630c91de3ba83292c2720de5a58))
+* **on-move:** ZMSA-73: on move if failed to get folder write lock, treat as tempfail ([#970](https://github.com/zone-eu/wildduck/issues/970)) ([967e4b1](https://github.com/zone-eu/wildduck/commit/967e4b1fd39b236ffe975dec8b5eef026f94aed0))
+* **tests-hibp:** ZMSA-30: add more hibp tests, enable hibp for tests in general ([#964](https://github.com/zone-eu/wildduck/issues/964)) ([af6bde3](https://github.com/zone-eu/wildduck/commit/af6bde35b0c8675b5acb80117eaaf5390db2b9db))
+
+## [1.46.17](https://github.com/zone-eu/wildduck/compare/v1.46.16...v1.46.17) (2026-01-22)
+
+
+### Bug Fixes
+
+* **imap-client-uid-search:** ZMSA-70: optimize search query client command parsing ([#963](https://github.com/zone-eu/wildduck/issues/963)) ([3b14035](https://github.com/zone-eu/wildduck/commit/3b14035f05fb5edb4dc57b1908cc57d9ae7ab592))
+* **imap-notifications:** ZMS-106: imap-connection notifiations handling remove lock, use queue instead ([#954](https://github.com/zone-eu/wildduck/issues/954)) ([1346054](https://github.com/zone-eu/wildduck/commit/1346054c4aec73b2b462f3ff70a1fe543f473dc0))
+* **rebuild:** ZMSA-48: fix rebuilding of multipart parts ([#942](https://github.com/zone-eu/wildduck/issues/942)) ([11b4fcb](https://github.com/zone-eu/wildduck/commit/11b4fcbcd4cb5926f469046645ea193d0d7a8624))
+
+## [1.46.16](https://github.com/zone-eu/wildduck/compare/v1.46.15...v1.46.16) (2026-01-15)
+
+
+### Bug Fixes
+
+* **deps:** bump deps ([#959](https://github.com/zone-eu/wildduck/issues/959)) ([4c38d29](https://github.com/zone-eu/wildduck/commit/4c38d29d0bf264f026e41514ce16a6e738ef343c))
+* **logging:** ZMSA-58: revert ZMS-216 ([#956](https://github.com/zone-eu/wildduck/issues/956)) ([dec117d](https://github.com/zone-eu/wildduck/commit/dec117ddf41231e6f2e8960d6022eae424158b68))
+* **uid-search:** ZMSA-67: improve UID SEARCH performance by reducing calls to imap-compiler ([#955](https://github.com/zone-eu/wildduck/issues/955)) ([6ffd0e6](https://github.com/zone-eu/wildduck/commit/6ffd0e6d1ea8eb51d9fe5008e500aada79c873cf))
+
+## [1.46.15](https://github.com/zone-eu/wildduck/compare/v1.46.14...v1.46.15) (2026-01-08)
+
+
+### Bug Fixes
+
+* **imap-connection:** ZMS-106: fix notification locking issues ([#949](https://github.com/zone-eu/wildduck/issues/949)) ([459bdae](https://github.com/zone-eu/wildduck/commit/459bdaeff7c4bc7bf11879e45c5b270ab9b5a0a1))
+* **pop3:** fix pipelining race condition causing mpop "invalid reply" errors ([#950](https://github.com/zone-eu/wildduck/issues/950)) ([ea86c9f](https://github.com/zone-eu/wildduck/commit/ea86c9fd464574a0b8a1bf95c6fbc29d501570a9))
+
+## [1.46.14](https://github.com/zone-eu/wildduck/compare/v1.46.13...v1.46.14) (2026-01-06)
+
+
+### Bug Fixes
+
+* advertise extended capabilities pre-auth (matches Gmail/Yahoo/Outlook behavior) ([#943](https://github.com/zone-eu/wildduck/issues/943)) ([81f30cb](https://github.com/zone-eu/wildduck/commit/81f30cbfe144f0042046992755a638dfdf102e89))
+* **POP3-TLSSocket:** ZMSA-57 fix bug: Possible EventEmitter memory leak detected. 11 timeout listeners added to [TLSSocket] ([#939](https://github.com/zone-eu/wildduck/issues/939)) ([b9d8957](https://github.com/zone-eu/wildduck/commit/b9d89576dba4eba1169603d3ba34edbd4d182a54))
+* **userHandler-asyncGetDeleted:** ZMSA-52: user-handler create new asyncGetDeleted function to get deleted user by username, id, main address ([#947](https://github.com/zone-eu/wildduck/issues/947)) ([f8e14f5](https://github.com/zone-eu/wildduck/commit/f8e14f5699b648a2415fb48a3f54b8fdada1f4ff))
+
+## [1.46.13](https://github.com/zone-eu/wildduck/compare/v1.46.12...v1.46.13) (2025-12-16)
+
+
+### Bug Fixes
+
+* **crypto.createDecipher:** ZMSA-47: dkim legacy decipher fixes ([#935](https://github.com/zone-eu/wildduck/issues/935)) ([538b22e](https://github.com/zone-eu/wildduck/commit/538b22e78c9614bc275a18ad7674be7415e84ff7))
+* **pop3top:** ZMSA-55: fix POP3 TOP -ERR write after end ([#938](https://github.com/zone-eu/wildduck/issues/938)) ([42a7b4a](https://github.com/zone-eu/wildduck/commit/42a7b4aadad35d92041ca6267a5e8db1a5d8900a))
+
+## [1.46.12](https://github.com/zone-eu/wildduck/compare/v1.46.11...v1.46.12) (2025-12-09)
+
+
+### Bug Fixes
+
+* **workflows-deps:** ZMSA-46: update release workflow and other workflows , update deps ([#933](https://github.com/zone-eu/wildduck/issues/933)) ([cbf6dee](https://github.com/zone-eu/wildduck/commit/cbf6dee2a3dfb56ddfc33773fd40e253b6ad9667))
+
+## [1.46.11](https://github.com/zone-eu/wildduck/compare/v1.46.10...v1.46.11) (2025-12-04)
+
+
+### Bug Fixes
+
+* **gridstore-upload:** ZMSA-17: fix gridstore upload deadlock ([#918](https://github.com/zone-eu/wildduck/issues/918)) ([4ab6f8e](https://github.com/zone-eu/wildduck/commit/4ab6f8e22cdce464fffbeff817e040753dcb882f))
+* **pop3-snicallback:** ZMSA-43: fix critical SNICallback bug in POP3 server ([#931](https://github.com/zone-eu/wildduck/issues/931)) ([5fa7139](https://github.com/zone-eu/wildduck/commit/5fa7139c1a50f2bc2497b8f1bab50f8cb3b95273))
+* **tls-logging:** ZMSA-40: where possible use _ip in gelf logs instead of _remoteAddress ([#929](https://github.com/zone-eu/wildduck/issues/929)) ([25ce95f](https://github.com/zone-eu/wildduck/commit/25ce95fb5ddb887a063446b8a0ae76dad73c94bc))
+
+## [1.46.10](https://github.com/zone-eu/wildduck/compare/v1.46.9...v1.46.10) (2025-12-02)
+
+
+### Bug Fixes
+
+* add config to allow use of SECLEVEL=0 to enable TLSv1 and TLSv1.1 support ([#926](https://github.com/zone-eu/wildduck/issues/926)) ([2ebb072](https://github.com/zone-eu/wildduck/commit/2ebb07248578108271b30145b4aa67b56e990b1b))
+* **api-docs:** ZMSA-36: update docs ([#925](https://github.com/zone-eu/wildduck/issues/925)) ([34c650d](https://github.com/zone-eu/wildduck/commit/34c650d095a3d402c7d4943783ecc1ceeb3fb5ca))
+* **authlog:** ZMSA-34: authLog add protocol for better logging in user update and asp generate and delete ([#924](https://github.com/zone-eu/wildduck/issues/924)) ([cf66a99](https://github.com/zone-eu/wildduck/commit/cf66a991960975662c2f9727e4bedb920d106b70))
+* **tls-sni-logging:** ZMSA-38: imap and pop3 servers when tls errors log meta regardless of error ([#928](https://github.com/zone-eu/wildduck/issues/928)) ([97149a8](https://github.com/zone-eu/wildduck/commit/97149a8d5553da06a6416883ecfe94e6f68a5c2d))
+* ZMSA-27: addressregister add disabled field migration - don't run when testing application ([#919](https://github.com/zone-eu/wildduck/issues/919)) ([94ee526](https://github.com/zone-eu/wildduck/commit/94ee5262d4d7c62a66b5bfc9fbd64632f15ec92e))
+* ZMSA-28: make migrations configurable ([#922](https://github.com/zone-eu/wildduck/issues/922)) ([a58d037](https://github.com/zone-eu/wildduck/commit/a58d0377097125e49aa2f6ca571542267352df87))
+* ZMSA-33: request user information also return requirePasswordChange flag value ([#923](https://github.com/zone-eu/wildduck/issues/923)) ([c42ad5c](https://github.com/zone-eu/wildduck/commit/c42ad5cc0e264fa575b46115cd91ba018bdac55c))
+
+## [1.46.9](https://github.com/zone-eu/wildduck/compare/v1.46.8...v1.46.9) (2025-11-25)
+
+
+### Bug Fixes
+
+* **req_existingPassword:** ZMSA-32: censor existingPassword in gelf logs ([#917](https://github.com/zone-eu/wildduck/issues/917)) ([1d04818](https://github.com/zone-eu/wildduck/commit/1d04818200e44417dfc4d15803cac2a6eff6a13c))
+* ZMSA-29: POP3 TOP command calculate counters correctly and correctly update them ([#914](https://github.com/zone-eu/wildduck/issues/914)) ([4442eb5](https://github.com/zone-eu/wildduck/commit/4442eb52e635103e6f0a9fd8c3e87de89f5ab82e))
+* ZMSA-31: when updating password set requirePasswordChange false ([#916](https://github.com/zone-eu/wildduck/issues/916)) ([551860c](https://github.com/zone-eu/wildduck/commit/551860cb0c0112af04eb4d4816151f5fb2189007))
+
+## [1.46.8](https://github.com/zone-eu/wildduck/compare/v1.46.7...v1.46.8) (2025-11-19)
+
+
+### Bug Fixes
+
+* ZMSA-24: when updating user info and setting new password reset pwned checks ([#912](https://github.com/zone-eu/wildduck/issues/912)) ([1e2bdcd](https://github.com/zone-eu/wildduck/commit/1e2bdcd61395b2589efb2ab7787c989a8456b1b5))
+
+## [1.46.7](https://github.com/zone-eu/wildduck/compare/v1.46.6...v1.46.7) (2025-11-19)
+
+
+### Bug Fixes
+
+* ZMSA-17: improve filterHandler and messageHandler logging ([#907](https://github.com/zone-eu/wildduck/issues/907)) ([03c4ffd](https://github.com/zone-eu/wildduck/commit/03c4ffd9cdc3b47f2ff16dde583e60120c8fd9b3))
+* ZMSA-21 & ZMSA-22: fixes to pwned check and return pwned infor on get user api query ([#909](https://github.com/zone-eu/wildduck/issues/909)) ([f494c83](https://github.com/zone-eu/wildduck/commit/f494c83895ca3e8f2f092a18e1a1d3b4811b471e))
+* ZMSA-24: unset lastPwnedCheck and passwordPwned when resetting user password ([#911](https://github.com/zone-eu/wildduck/issues/911)) ([78fbe8a](https://github.com/zone-eu/wildduck/commit/78fbe8a669ddd24cbe38f4656026e9a5cfe8e2b9))
+
+## [1.46.6](https://github.com/zone-eu/wildduck/compare/v1.46.5...v1.46.6) (2025-11-13)
+
+
+### Bug Fixes
+
+* check password against hibp on hardfail too ([#904](https://github.com/zone-eu/wildduck/issues/904)) ([34e6be8](https://github.com/zone-eu/wildduck/commit/34e6be84ab060d4fb2eb980336d05d96baf24916))
+* fixed uncaught exception `dest.on` is not a fn (closes [#858](https://github.com/zone-eu/wildduck/issues/858)) ([#905](https://github.com/zone-eu/wildduck/issues/905)) ([f8bae92](https://github.com/zone-eu/wildduck/commit/f8bae923521f1cf27af698a1529358c6cdd3d66f))
+* **hibp-use-keepalive:** ZMSA-12: use keepalive when querying HIBP database ([#900](https://github.com/zone-eu/wildduck/issues/900)) ([1d42bc7](https://github.com/zone-eu/wildduck/commit/1d42bc7c1ba7928592bf2670ea5801f27450f1bc))
+* **hibp:** ZMSA-11: check user password in HIBP after successful password check ([#901](https://github.com/zone-eu/wildduck/issues/901)) ([ca38ef2](https://github.com/zone-eu/wildduck/commit/ca38ef2b9a20e31b186cb62364ff1ffefbac8afd))
+* **messageHandler-logging:** ZMSA-15: improve message-handler logging ([#903](https://github.com/zone-eu/wildduck/issues/903)) ([5c508fe](https://github.com/zone-eu/wildduck/commit/5c508fe491e328dd56677fb0979de639bc3c0f15))
+* **threading:** ZMS-281: refactor threading ([#899](https://github.com/zone-eu/wildduck/issues/899)) ([81c746c](https://github.com/zone-eu/wildduck/commit/81c746c280e9bada4ff60f64644baa6cc0045239))
+
+## [1.46.5](https://github.com/zone-eu/wildduck/compare/v1.46.4...v1.46.5) (2025-11-03)
+
+
+### Bug Fixes
+
+* ZMS-280: bump deps ([#897](https://github.com/zone-eu/wildduck/issues/897)) ([79994f1](https://github.com/zone-eu/wildduck/commit/79994f19e5f8798ed0007730610ef4100b19b00d))
+
+## [1.46.4](https://github.com/zone-eu/wildduck/compare/v1.46.3...v1.46.4) (2025-10-31)
+
+
+### Bug Fixes
+
+* **threading:** fix threading ([#895](https://github.com/zone-eu/wildduck/issues/895)) ([52d5449](https://github.com/zone-eu/wildduck/commit/52d54492bf5a7c36c7eae96519ee3751daa32d82))
+
+## [1.46.3](https://github.com/zone-eu/wildduck/compare/v1.46.2...v1.46.3) (2025-10-27)
+
+
+### Bug Fixes
+
+* **addAsync-thread:** ZMSA-2: message addAsync, if a message is referenced then use reference's thread ([#889](https://github.com/zone-eu/wildduck/issues/889)) ([2e89a0e](https://github.com/zone-eu/wildduck/commit/2e89a0e8f0596eb0f9b4b066aa2ee2fc0ee53064))
+* **addressregister-migration:** ZMSA-6: improve addressregister migration script ([#892](https://github.com/zone-eu/wildduck/issues/892)) ([de6ee9f](https://github.com/zone-eu/wildduck/commit/de6ee9f072b360d768338856648d16c463a32af7))
+* **health:** ZMSA-4: health endpoint also add WD API version ([#890](https://github.com/zone-eu/wildduck/issues/890)) ([35ed9fc](https://github.com/zone-eu/wildduck/commit/35ed9fcfe8e27955b3aeb3ff438ae4e6610d557e))
+* **imap-onAppend-logging:** ZMSA-7: onappend logging - parsedHeader.from might not exist ([#894](https://github.com/zone-eu/wildduck/issues/894)) ([27fcd73](https://github.com/zone-eu/wildduck/commit/27fcd730bb8d9dfb9f81f0f764c9cb417ffc211f))
+* **threading:** ZMSA-5: if referencing a deleted thread then recreate it ([#893](https://github.com/zone-eu/wildduck/issues/893)) ([7b88109](https://github.com/zone-eu/wildduck/commit/7b8810993c592bacf1294e8aec2da4c9bfe0a113))
+
+## [1.46.2](https://github.com/zone-eu/wildduck/compare/v1.46.1...v1.46.2) (2025-10-17)
+
+
+### Bug Fixes
+
+* ZMSA-1: update release workflow, update deps, use updated deps, scope package ([#887](https://github.com/zone-eu/wildduck/issues/887)) ([e3d3221](https://github.com/zone-eu/wildduck/commit/e3d3221bd5457400af1b07aad0a7fca80bd66191))
+
+## [1.46.1](https://github.com/zone-eu/wildduck/compare/v1.46.0...v1.46.1) (2025-10-14)
+
+
+### Bug Fixes
+
+* **imap-append:** ZMS-276: imap append improve logging add new fields to logging ([#884](https://github.com/zone-eu/wildduck/issues/884)) ([6e4b701](https://github.com/zone-eu/wildduck/commit/6e4b701a88edc671c9e8d0f816230fca26e95871))
+* **pluginhandler:** ZMS-269: plugins - use wild-plugins, update options, allow for dynamic config ([#886](https://github.com/zone-eu/wildduck/issues/886)) ([479e5bc](https://github.com/zone-eu/wildduck/commit/479e5bcccd1e351f6441216e36f3c9f6150579f4))
+
+## [1.46.0](https://github.com/zone-eu/wildduck/compare/v1.45.13...v1.46.0) (2025-10-07)
+
+
+### Features
+
+* **deps-node:** ZMS-267: Bump Deps, Update API Docs, Remove support for node v16 and v18 ([#867](https://github.com/zone-eu/wildduck/issues/867)) ([48ee3ea](https://github.com/zone-eu/wildduck/commit/48ee3ead8ca4a33d2cb5bd47181ebd8814588d85))
+
+
+### Bug Fixes
+
+* **addressregister:** ZMS-268: add new addressregister endpoint to disable an entry or edit it ([#873](https://github.com/zone-eu/wildduck/issues/873)) ([08e5070](https://github.com/zone-eu/wildduck/commit/08e5070f45f8e062bc2bcb75c9ece66c9bdd6313))
+* **fulltext-filter:** ZMS-257: Add boolean logic to fulltext filter ([#863](https://github.com/zone-eu/wildduck/issues/863)) ([06569f6](https://github.com/zone-eu/wildduck/commit/06569f6eb93f9fccf6dfb649651158fcec807fbd))
+* **messages-search:** ZMS-271: optimize user messages search query ([#876](https://github.com/zone-eu/wildduck/issues/876)) ([63811c7](https://github.com/zone-eu/wildduck/commit/63811c7787b5e254f0b425d326762d05a20ba935))
+* **migrations:** ZMS-274 Implement MongoDb Migrations in Wildduck ([#879](https://github.com/zone-eu/wildduck/issues/879)) ([f71972d](https://github.com/zone-eu/wildduck/commit/f71972d1237927326259837c8163604389f9877b))
+* **pop3download-log:** ZMS-263: POP3RETR OK also log transferred bytes' size ([#872](https://github.com/zone-eu/wildduck/issues/872)) ([5411118](https://github.com/zone-eu/wildduck/commit/5411118da00db859ec3981f525fab6c51c4b6113))
+* **pwned-check:** ZMS-264: Add feature to check password with PwnedPassword API on User Login ([#864](https://github.com/zone-eu/wildduck/issues/864)) ([fb01977](https://github.com/zone-eu/wildduck/commit/fb019774c3dea7f08c7b97e8ac285aabb74bbdf8))
+* **search-apply:** ZMS-275: search-apply allow to delete found messages ([#881](https://github.com/zone-eu/wildduck/issues/881)) ([1dc422f](https://github.com/zone-eu/wildduck/commit/1dc422f993a290990618887663d61737880bfa15))
+* update api docs ([#880](https://github.com/zone-eu/wildduck/issues/880)) ([a38a704](https://github.com/zone-eu/wildduck/commit/a38a7046c2144622aedd0aabaf4b973036132b86))
+
 ## [1.45.13](https://github.com/zone-eu/wildduck/compare/v1.45.12...v1.45.13) (2025-09-11)
 
 

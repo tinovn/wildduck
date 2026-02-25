@@ -7,7 +7,7 @@ const chai = require('chai');
 
 const expect = chai.expect;
 chai.config.includeStack = true;
-const config = require('wild-config');
+const config = require('@zone-eu/wild-config');
 
 const server = supertest.agent(`http://127.0.0.1:${config.api.port}`);
 
@@ -85,6 +85,7 @@ describe('API Users', function () {
             success: true,
             address: 'john@example.com',
             id: user,
+            passwordPwned: true,
             username: 'myuser2',
             scope: 'master',
             require2fa: false,
@@ -160,6 +161,7 @@ describe('API Users', function () {
             success: true,
             address: `myuser2hash@${os.hostname().toLowerCase()}`,
             id: user2,
+            passwordPwned: true,
             username: 'myuser2hash',
             scope: 'master',
             require2fa: false,

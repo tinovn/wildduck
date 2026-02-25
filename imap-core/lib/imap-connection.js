@@ -230,6 +230,15 @@ class IMAPConnection extends EventEmitter {
                             this.id,
                             args[0].message || args[0]
                         );
+                        this.loggelf({
+                            short_message: '[IMAPSENDERR] ' + (args[0] && args[0].message ? args[0].message : 'Send error'),
+                            full_message: args[0] && args[0].stack,
+                            _error: args[0] && (args[0].message || args[0]),
+                            _code: args[0] && args[0].code,
+                            _tnx: 'send',
+                            _sess: this.id,
+                            _ip: this.remoteAddress
+                        });
                         return this.close();
                     }
                     if (typeof callback === 'function') {
@@ -248,6 +257,15 @@ class IMAPConnection extends EventEmitter {
                     this.id,
                     err.message || err
                 );
+                this.loggelf({
+                    short_message: '[IMAPSENDERR] ' + (err && err.message ? err.message : 'Send error'),
+                    full_message: err && err.stack,
+                    _error: err && (err.message || err),
+                    _code: err && err.code,
+                    _tnx: 'send',
+                    _sess: this.id,
+                    _ip: this.remoteAddress
+                });
                 return this.close();
             }
             if (this.compression) {
@@ -469,6 +487,14 @@ class IMAPConnection extends EventEmitter {
             this.id,
             err.message
         );
+        this.loggelf({
+            short_message: '[IMAPCONNERR] ' + (err && err.message ? err.message : 'Connection error'),
+            full_message: err && err.stack,
+            _error: err && err.message,
+            _code: err && err.code,
+            _sess: this.id,
+            _ip: this.remoteAddress
+        });
         this.emit('error', err);
     }
 
@@ -570,11 +596,10 @@ class IMAPConnection extends EventEmitter {
         let isSelected = mailbox => mailbox && conn.selected && conn.selected.mailbox && conn.selected.mailbox.toString() === mailbox.toString();
 
         this._listenerData = {
-            lock: false,
             cleared: false,
             callback(message) {
                 let selectedMailbox = conn.selected && conn.selected.mailbox;
-                if (this._closing || this._closed) {
+                if (conn._closing || conn._closed) {
                     conn.clearNotificationListener();
                     return;
                 }
@@ -599,18 +624,15 @@ class IMAPConnection extends EventEmitter {
                     return;
                 }
 
-                if (conn._listenerData.lock || !selectedMailbox) {
-                    // race condition, do not allow fetching data before previous fetch is finished
+                if (!selectedMailbox) {
                     return;
                 }
 
-                conn._listenerData.lock = true;
                 conn._server.notifier.getUpdates(selectedMailbox, conn.selected.modifyIndex, (err, updates) => {
                     if (!conn._listenerData || conn._listenerData.cleared) {
                         // already logged out
                         return;
                     }
-                    conn._listenerData.lock = false;
 
                     if (err) {
                         conn.logger.info(
@@ -638,11 +660,27 @@ class IMAPConnection extends EventEmitter {
                         conn.selected.modifyIndex = updates[updates.length - 1].modseq;
                     }
 
-                    // append received notifications to the list
-                    conn.selected.notifications = conn.selected.notifications.concat(updates);
+                    if (!conn.selected.notificationQueueKeys) {
+                        conn.selected.notificationQueueKeys = new Set();
+                    }
+
+                    let queued = 0;
+                    for (let update of updates) {
+                        let key = update && update._id ? update._id.toString() : '';
+                        if (!key || conn.selected.notificationQueueKeys.has(key)) {
+                            continue;
+                        }
+
+                        conn.selected.notificationQueueKeys.add(key);
+                        conn.selected.notifications.push(update);
+                        queued++;
+                    }
+
                     if (conn.idling) {
                         // when idling emit notifications immediately
-                        conn.emitNotifications();
+                        if (queued) {
+                            conn.emitNotifications();
+                        }
                     }
                 });
             }
@@ -662,7 +700,24 @@ class IMAPConnection extends EventEmitter {
 
     // send notifications to client
     emitNotifications() {
-        if (this.state !== 'Selected' || !this.selected || !this.selected.notifications.length) {
+        if (this.state !== 'Selected' || !this.selected) {
+            return;
+        }
+
+        let notifications = this.selected.notifications || [];
+        this.selected.notifications = [];
+
+        if (this.selected.notificationQueueKeys && notifications.length) {
+            for (let i = 0, len = notifications.length; i < len; i++) {
+                let update = notifications[i];
+                let key = update && update._id ? update._id.toString() : '';
+                if (key) {
+                    this.selected.notificationQueueKeys.delete(key);
+                }
+            }
+        }
+
+        if (!notifications.length) {
             return;
         }
 
@@ -677,7 +732,7 @@ class IMAPConnection extends EventEmitter {
             },
             '[%s] Pending notifications: %s',
             this.id,
-            this.selected.notifications.length
+            notifications.length
         );
 
         // find UIDs that are both added and removed
@@ -685,8 +740,8 @@ class IMAPConnection extends EventEmitter {
         let removed = new Set(); // removed UIDs
         let skip = new Set(); // UIDs that are removed before ever seen
 
-        for (let i = 0, len = this.selected.notifications.length; i < len; i++) {
-            let update = this.selected.notifications[i];
+        for (let i = 0, len = notifications.length; i < len; i++) {
+            let update = notifications[i];
             if (update.command === 'EXISTS') {
                 added.add(update.uid);
             } else if (update.command === 'EXPUNGE') {
@@ -702,20 +757,20 @@ class IMAPConnection extends EventEmitter {
 
         // filter multiple FETCH calls, only keep latest, otherwise might mess up MODSEQ responses
         let fetches = new Set();
-        for (let i = this.selected.notifications.length - 1; i >= 0; i--) {
-            let update = this.selected.notifications[i];
+        for (let i = notifications.length - 1; i >= 0; i--) {
+            let update = notifications[i];
             if (update.command === 'FETCH') {
                 // skip multiple flag updates and updates for removed or newly added messages
                 if (fetches.has(update.uid) || added.has(update.uid) || removed.has(update.uid)) {
-                    this.selected.notifications.splice(i, 1);
+                    notifications.splice(i, 1);
                 } else {
                     fetches.add(update.uid);
                 }
             }
         }
 
-        for (let i = 0, len = this.selected.notifications.length; i < len; i++) {
-            let update = this.selected.notifications[i];
+        for (let i = 0, len = notifications.length; i < len; i++) {
+            let update = notifications[i];
 
             // skip unnecessary entries that are already removed
             if (skip.has(update.uid)) {
@@ -808,9 +863,6 @@ class IMAPConnection extends EventEmitter {
                 ]
             });
         }
-
-        // clear queue
-        this.selected.notifications = [];
     }
 
     formatResponse(command, uid, data) {

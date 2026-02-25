@@ -9,7 +9,7 @@ const chai = require('chai');
 
 const expect = chai.expect;
 chai.config.includeStack = true;
-const config = require('wild-config');
+const config = require('@zone-eu/wild-config');
 
 const server = supertest.agent(`http://127.0.0.1:${config.api.port}`);
 
@@ -205,6 +205,115 @@ describe('API Filters', function () {
 
         expect(responseGet.body.success).to.be.true;
         expect(responseGet.body.action.mailbox).to.be.equal(inbox);
+    });
+
+    describe('Filter spam action', function () {
+        let spamFilter;
+
+        it('should POST /users/{user}/filters expect success / with spam action', async () => {
+            const response = await server
+                .post(`/users/${user}/filters`)
+                .send({
+                    name: 'spam action filter',
+                    query: {
+                        from: 'account-spam'
+                    },
+                    action: {
+                        spam: true,
+                        seen: true
+                    }
+                })
+                .expect(200);
+            expect(response.body.success).to.be.true;
+            spamFilter = response.body.id;
+
+            const filterDataResponse = await server.get(`/users/${user}/filters/${spamFilter}`).expect(200);
+            expect(filterDataResponse.body.success).to.be.true;
+            expect(filterDataResponse.body.action.spam).to.equal(true);
+            expect(filterDataResponse.body.action.seen).to.equal(true);
+        });
+
+        it('should PUT /users/{user}/filters/{filter} expect success / clear spam action', async () => {
+            const response = await server
+                .put(`/users/${user}/filters/${spamFilter}`)
+                .send({
+                    action: {
+                        spam: null
+                    }
+                })
+                .expect(200);
+            expect(response.body.success).to.be.true;
+
+            const filterDataResponse = await server.get(`/users/${user}/filters/${spamFilter}`).expect(200);
+            expect(filterDataResponse.body.success).to.be.true;
+            expect(filterDataResponse.body.action).to.not.have.property('spam');
+            expect(filterDataResponse.body.action.seen).to.equal(true);
+        });
+    });
+
+    describe('Filter nullable boolean actions', function () {
+        let nullableUpdateFilter;
+
+        it('should POST /users/{user}/filters expect success / ignore null seen, flag and delete actions', async () => {
+            const response = await server
+                .post(`/users/${user}/filters`)
+                .send({
+                    name: 'nullable boolean actions create',
+                    query: {
+                        from: 'nullable-create'
+                    },
+                    action: {
+                        seen: null,
+                        flag: null,
+                        delete: null
+                    }
+                })
+                .expect(200);
+            expect(response.body.success).to.be.true;
+
+            const filterDataResponse = await server.get(`/users/${user}/filters/${response.body.id}`).expect(200);
+            expect(filterDataResponse.body.success).to.be.true;
+            expect(filterDataResponse.body.action).to.not.have.property('seen');
+            expect(filterDataResponse.body.action).to.not.have.property('flag');
+            expect(filterDataResponse.body.action).to.not.have.property('delete');
+        });
+
+        it('should PUT /users/{user}/filters/{filter} expect success / clear seen, flag and delete actions with null values', async () => {
+            const createResponse = await server
+                .post(`/users/${user}/filters`)
+                .send({
+                    name: 'nullable boolean actions update',
+                    query: {
+                        from: 'nullable-update'
+                    },
+                    action: {
+                        seen: true,
+                        flag: true,
+                        delete: true
+                    }
+                })
+                .expect(200);
+            expect(createResponse.body.success).to.be.true;
+            nullableUpdateFilter = createResponse.body.id;
+
+            const response = await server
+                .put(`/users/${user}/filters/${nullableUpdateFilter}`)
+                .send({
+                    action: {
+                        seen: null,
+                        flag: null,
+                        delete: null
+                    }
+                })
+                .expect(200);
+            expect(response.body.success).to.be.true;
+
+            const filterDataResponse = await server.get(`/users/${user}/filters/${nullableUpdateFilter}`).expect(200);
+            expect(filterDataResponse.body.success).to.be.true;
+            expect(filterDataResponse.body.action).to.not.have.property('seen');
+            expect(filterDataResponse.body.action).to.not.have.property('flag');
+            expect(filterDataResponse.body.action).to.not.have.property('delete');
+        });
     });
 
     describe('Filter metaData', function () {

@@ -28,6 +28,11 @@ module.exports = {
  * @param {Object} connection IMAPConnection instance
  */
 function upgrade(connection) {
+    // Check if connection is already closed or closing
+    if (!connection._parser) {
+        return connection.close();
+    }
+
     connection._socket.unpipe(connection._parser);
     connection.writeStream.unpipe(connection._socket);
     connection._upgrading = true;
@@ -38,8 +43,15 @@ function upgrade(connection) {
         isServer: true,
         server: connection._server.server,
         SNICallback: (servername, cb) => {
+            const opts = {
+                servername,
+                meta: {
+                    remoteAddress: connection._socket.remoteAddress
+                }
+            };
+
             // eslint-disable-next-line new-cap
-            connection._server.options.SNICallback(servername, (err, context) => {
+            connection._server.options.SNICallback(opts, (err, context) => {
                 if (err) {
                     connection._server.logger.error(
                         {
@@ -78,6 +90,11 @@ function upgrade(connection) {
     secureSocket.setTimeout(connection._server.options.socketTimeout || SOCKET_TIMEOUT, () => connection._onTimeout());
 
     secureSocket.on('secure', () => {
+        // Check again if connection is still active
+        if (!connection._parser) {
+            return connection.close();
+        }
+
         connection.secure = true;
         connection._socket = secureSocket;
         connection._upgrading = false;

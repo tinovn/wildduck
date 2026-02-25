@@ -1,7 +1,7 @@
 'use strict';
 
 const log = require('npmlog');
-const config = require('wild-config');
+const config = require('@zone-eu/wild-config');
 const IMAPServerModule = require('./imap-core');
 const IMAPServer = IMAPServerModule.IMAPServer;
 const ImapNotifier = require('./lib/imap-notifier');
@@ -89,13 +89,21 @@ let createInterface = (ifaceOptions, callback) => {
 
         skipFetchLog: config.log.skipFetchLog,
 
-        SNICallback(servername, cb) {
+        SNICallback(opts, cb) {
+            if (typeof opts === 'string') {
+                opts = {
+                    servername: opts,
+                    meta: {}
+                };
+            }
+
             certs
                 .getContextForServername(
-                    servername,
+                    opts.servername,
                     serverOptions,
                     {
-                        source: 'imap'
+                        source: 'imap',
+                        ...opts.meta
                     },
                     {
                         loggelf: message => loggelf(message)
@@ -119,6 +127,17 @@ let createInterface = (ifaceOptions, callback) => {
         if (!started) {
             started = true;
             return callback(err);
+        }
+
+        if (typeof loggelf === 'function') {
+            loggelf({
+                short_message: '[IMAPERROR] ' + (err && err.message ? err.message : 'Server error'),
+                full_message: err && err.stack,
+                _error: err && err.message,
+                _code: err && err.code,
+                _tnx: 'server',
+                _service: 'imap'
+            });
         }
 
         logger.error(
@@ -278,6 +297,18 @@ module.exports = done => {
 
         createInterface(opts, err => {
             if (err) {
+                if (typeof loggelf === 'function') {
+                    loggelf({
+                        short_message: '[IMAPBINDFAIL] ' + (err && err.message ? err.message : 'Bind failed'),
+                        full_message: err && err.stack,
+                        _error: err && err.message,
+                        _code: err && err.code,
+                        _tnx: 'bind',
+                        _host: opts.host,
+                        _port: opts.port,
+                        _secure: opts.secure ? 'yes' : 'no'
+                    });
+                }
                 logger.error(
                     {
                         err,

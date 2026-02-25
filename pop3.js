@@ -1,6 +1,6 @@
 'use strict';
 
-const config = require('wild-config');
+const config = require('@zone-eu/wild-config');
 const log = require('npmlog');
 const POP3Server = require('./lib/pop3/server');
 const UserHandler = require('./lib/user-handler');
@@ -40,13 +40,21 @@ const serverOptions = {
         version: config.pop3.version || packageData.version
     },
 
-    SNICallback(servername, cb) {
+    SNICallback(opts, cb) {
+        if (typeof opts === 'string') {
+            opts = {
+                servername: opts,
+                meta: {}
+            };
+        }
+
         certs
             .getContextForServername(
-                servername,
+                opts.servername,
                 serverOptions,
                 {
-                    source: 'pop3'
+                    source: 'pop3',
+                    ...opts.meta
                 },
                 {
                     loggelf: message => loggelf(message)
@@ -250,11 +258,19 @@ const serverOptions = {
                         let limiter = new LimitedFetch({
                             key: 'pdw:' + session.user.id,
                             ttlcounter: messageHandler.counters.ttlcounter,
-                            maxBytes: limit
+                            maxBytes: limit,
+                            skipCounter: true
                         });
 
                         response.value.pipe(limiter);
                         response.value.once('error', err => limiter.emit('error', err));
+
+                        // ends all streams and cleans up
+                        limiter.abort = () => {
+                            response.value.abort(); // abort rebuilder
+                            response.value.unpipe(limiter);
+                            limiter.end();
+                        };
 
                         callback(null, limiter);
                     }

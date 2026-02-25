@@ -1,6 +1,6 @@
 'use strict';
 
-const config = require('wild-config');
+const config = require('@zone-eu/wild-config');
 const restify = require('restify');
 const log = require('npmlog');
 const logger = require('restify-logger');
@@ -82,7 +82,7 @@ const serverOptions = {
             let message = {
                 short_message: 'HTTP [' + req.method + ' ' + path + '] ' + (body.success ? 'OK' : 'FAILED'),
 
-                _remote_ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+                _req_remoteAddress: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
 
                 _ip: ((req.params && req.params.ip) || '').toString().substr(0, 40) || '',
                 _sess: ((req.params && req.params.sess) || '').toString().substr(0, 40) || '',
@@ -111,7 +111,7 @@ const serverOptions = {
                 // cast value to string if not string
                 value = typeof req.params[key] === 'string' ? req.params[key] : util.inspect(req.params[key], false, 3).toString().trim();
 
-                if (['password'].includes(key)) {
+                if (['password', 'existingPassword'].includes(key)) {
                     value = '***';
                 } else if (value.length > 128) {
                     value = value.substr(0, 128) + '…';
@@ -169,12 +169,18 @@ if (config.api.secure && certOptions.key) {
     let defaultSecureContext = tls.createSecureContext(httpsServerOptions);
 
     httpsServerOptions.SNICallback = (servername, cb) => {
+        const opts = {
+            servername,
+            meta: {}
+        };
+
         certs
             .getContextForServername(
-                servername,
+                opts.servername,
                 httpsServerOptions,
                 {
-                    source: 'API'
+                    source: 'API',
+                    ...opts.meta
                 },
                 {
                     loggelf: message => loggelf(message)
